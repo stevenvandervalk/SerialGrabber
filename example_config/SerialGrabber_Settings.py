@@ -22,6 +22,7 @@ from serial_grabber.reader import TransactionExtractor
 from serial_grabber.reader.FileReader import FileReader
 from serial_grabber.reader.SerialReader import SerialReader
 from serial_grabber.processor.UploadProcessor import UploadProcessor
+from serial_grabber.processor import JsonFileProcessor
 
 #Serial Settings
 timeout = 1
@@ -39,7 +40,7 @@ reader_error_sleep = 1
 
 drop_carriage_return = True
 
-transaction = TransactionExtractor("default", "BEGIN DATA", "END DATA")
+transaction = TransactionExtractor("default", "#", "$")
 
 reader = SerialReader(transaction,
                       1000,
@@ -49,4 +50,9 @@ reader = SerialReader(transaction,
                       parity=parity,
                       stop_bits=stop_bits)
 
-processor = UploadProcessor("https://example.org/cgi-bin/upload.py")
+#processor = UploadProcessor("https://example.org/cgi-bin/upload.py")
+
+# pass to JSONProcessor to output what is contained in data and then call ThingSpeak API
+processor = JsonFileProcessor("data/processed/current.json", None, 1)
+
+
